@@ -23,7 +23,15 @@ fn known_services() -> HashMap<u16, &'static str> {
 
 #[tokio::main]
 async fn main() {
-    let target = "127.0.0.1";
+    let args: Vec<String> = std::env::args().collect();
+    let target = if args.len() > 1 {
+        args[1].clone()
+    } else {
+        println!("Uso: portscan-rs <indirizzo>");
+        println!("Esempio: portscan-rs 192.168.1.1");
+        std::process::exit(1);
+    };
+
     let services = known_services();
 
     println!("╔══════════════════════════════════════╗");
@@ -36,6 +44,7 @@ async fn main() {
     let mut handles = vec![];
 
     for port in 1u16..=65535 {
+        let target = target.clone();
         let handle = tokio::spawn(async move {
             let addr: SocketAddr = format!("{}:{}", target, port).parse().unwrap();
             let result = timeout(Duration::from_millis(500), TcpStream::connect(&addr)).await;
