@@ -1,7 +1,9 @@
 [package]
 name = "portscan-rs"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 
 [dependencies]
+colored = "3.1.1"
+indicatif = "0.18.4"
 tokio = { version = "1.52.3", features = ["full"] }
